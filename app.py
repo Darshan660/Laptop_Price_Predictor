@@ -6,8 +6,8 @@ import base64
 
 
 # --- GENERAL SETTINGS ---
-PAGE_TITLE = "WhatsApp Chat Analyzer"
-PAGE_ICON = ":mag_right:"
+PAGE_TITLE = "Laptop Price Predictor"
+PAGE_ICON = "💻"
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 def add_bg_from_local(image_files):
