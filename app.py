@@ -4,6 +4,12 @@ import pickle
 from pathlib import Path
 import base64
 
+
+# --- GENERAL SETTINGS ---
+PAGE_TITLE = "WhatsApp Chat Analyzer"
+PAGE_ICON = ":mag_right:"
+st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
+
 def add_bg_from_local(image_files):
     with open(image_files[0], "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
@@ -43,11 +49,6 @@ df = pickle.load(open('df.pkl','rb'))
 # --- PATH SETTINGS ---
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 css_file = current_dir / "styles" / "main.css"
-
-# --- GENERAL SETTINGS ---
-PAGE_TITLE = "WhatsApp Chat Analyzer"
-PAGE_ICON = ":mag_right:"
-st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 # --- LOAD CSS---
 with open(css_file) as f:
