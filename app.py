@@ -32,7 +32,7 @@ def add_bg_from_local(image_files):
     ,
     unsafe_allow_html=True
     )
-add_bg_from_local([r'D:\College\SEM 6\Projects\laptop-price-predictor-regression-project-main\bg_image\Purple_hexagonal.jpg', r'D:\College\SEM 6\Projects\laptop-price-predictor-regression-project-main\bg_image\Purple_hexagonal.jpg',r'D:\College\SEM 6\Projects\laptop-price-predictor-regression-project-main\bg_image\Purple_hexagonal.jpg'])
+add_bg_from_local([r'bg_image\Purple_hexagonal.jpg', r'bg_image\Purple_hexagonal.jpg',r'bg_image\Purple_hexagonal.jpg'])
 
 
 
