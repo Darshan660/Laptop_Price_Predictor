@@ -56,62 +56,101 @@ with open(css_file) as f:
 
 st.title("Laptop Predictor")
 
+# All inputs:
 # brand
-company = st.selectbox('Brand',df['Company'].unique())
+brand_options = df['Company'].unique().tolist()
+brand_options.insert(0, 'Select an option')
+company = st.selectbox('Brand', brand_options)
 
 # type of laptop
-type = st.selectbox('Type',df['TypeName'].unique())
+type_options = df['TypeName'].unique().tolist()
+type_options.insert(0, 'Select an option')
+laptop_type = st.selectbox('Type', type_options)
 
 # Ram
-ram = st.selectbox('RAM(in GB)',[2,4,6,8,12,16,24,32,64])
+ram_options = [2, 4, 6, 8, 12, 16, 24, 32, 64]
+ram_options.insert(0, 'Select an option')
+ram = st.selectbox('RAM(in GB)', ram_options)
 
 # weight
 weight = st.number_input('Weight of the Laptop')
 
 # Touchscreen
-touchscreen = st.selectbox('Touchscreen',['No','Yes'])
+touchscreen_options = ['No', 'Yes']
+touchscreen_options.insert(0, 'Select an option')
+touchscreen = st.selectbox('Touchscreen', touchscreen_options)
 
 # IPS
-ips = st.selectbox('IPS',['No','Yes'])
+ips_options = ['No', 'Yes']
+ips_options.insert(0, 'Select an option')
+ips = st.selectbox('IPS', ips_options)
 
 # screen size
-screen_size = st.number_input('Screen Size')
+screen_size = st.number_input('Screen Size (in inch)')
 
 # resolution
 resolution = st.selectbox('Screen Resolution',['1920x1080','1366x768','1600x900','3840x2160','3200x1800','2880x1800','2560x1600','2560x1440','2304x1440'])
 
 #cpu
-cpu = st.selectbox('CPU',df['Cpu brand'].unique())
+cpu_options = df['Cpu brand'].unique().tolist()
+cpu_options.insert(0, 'Select an option')
+cpu = st.selectbox('CPU', cpu_options)
 
-hdd = st.selectbox('HDD(in GB)',[0,128,256,512,1024,2048])
+# HDD
+hdd_options = [0, 128, 256, 512, 1024, 2048, 4096]
+hdd_options.insert(0, 'Select an option')
+hdd = st.selectbox('HDD(in GB)', hdd_options)
 
-ssd = st.selectbox('SSD(in GB)',[0,8,128,256,512,1024])
+# SSD
+ssd_options = [0, 128, 256, 512, 1024, 2048]
+ssd_options.insert(0, 'Select an option')
+ssd = st.selectbox('SSD(in GB)', ssd_options)
 
-gpu = st.selectbox('GPU',df['Gpu brand'].unique())
+# GPU
+gpu_options = df['Gpu brand'].unique().tolist()
+gpu_options.insert(0, 'Select an option')
+gpu = st.selectbox('GPU', gpu_options)
 
-os = st.selectbox('OS',df['os'].unique())
+# OS
+if company == 'Apple':
+    os_options = ['Mac']
+else:
+    os_options = [option for option in df['os'].unique() if option != 'Mac']
+os = st.selectbox('OS', ['Select an OS'] + os_options)
 
+# Prediction
 if st.button('Predict Price'):
     # query
-    ppi = None
-    if touchscreen == 'Yes':
-        touchscreen = 1
+    if company == 'Select an option' or laptop_type == 'Select an option' or ram == 'Select an option' or \
+            weight < 0.5 or touchscreen == 'Select an option' or ips == 'Select an option' or \
+            screen_size == 0 or resolution == 'Select a resolution' or cpu == 'Select a CPU' or \
+            (hdd == 'Select an option' and ssd == 'Select an option') or (hdd == 0 and ssd == 0) or gpu == 'Select a GPU' or os == 'Select an OS':
+        st.error('Please select all specifications.')
     else:
-        touchscreen = 0
+        ppi = None
+        if touchscreen == 'Yes':
+            touchscreen = 1
+        else:
+            touchscreen = 0
 
-    if ips == 'Yes':
-        ips = 1
-    else:
-        ips = 0
+        if ips == 'Yes':
+            ips = 1
+        else:
+            ips = 0
 
-    X_res = int(resolution.split('x')[0])
-    Y_res = int(resolution.split('x')[1])
-    try:
-        ppi = ((X_res**2) + (Y_res**2))**0.5/screen_size
-        query = np.array([company,type,ram,weight,touchscreen,ips,ppi,cpu,hdd,ssd,gpu,os],dtype='object')
+        X_res = int(resolution.split('x')[0])
+        Y_res = int(resolution.split('x')[1])
+        try:
+            ppi = ((X_res**2) + (Y_res**2))**0.5/screen_size
+            query = np.array([company,laptop_type,ram,weight,touchscreen,ips,ppi,cpu,hdd,ssd,gpu,os],dtype='object')
 
-        query = query.reshape(1,12)
-        st.title("The predicted price of this configuration is " + str(int(np.exp(pipe.predict(query)[0]))))
-    except Exception as e:
-        st.write("Please don't enter 0 mention some value!")
+            query = query.reshape(1,12)
+            st.title("The predicted price of this configuration is " + str(int(np.exp(pipe.predict(query)[0]))))
+        except Exception as e:
+            if hdd == 'Select an option':
+                st.write("Please select 0 if your laptop doesn't contain any HDD")
+            elif ssd == 'Select an option':
+                st.write("Please select 0 if your laptop doesn't contain any SSD")
+            else:
+                st.write("Please don't enter 0, mention some value!")
 
