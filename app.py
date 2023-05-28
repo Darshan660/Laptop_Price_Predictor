@@ -54,7 +54,8 @@ css_file = current_dir / "styles" / "main.css"
 with open(css_file) as f:
     st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
 
-st.title("Laptop Predictor")
+# Heading of the Page
+st.markdown("<h1 style='text-align: center; text-decoration: underline;'>Laptop Predictor</h1>", unsafe_allow_html=True)
 
 # All inputs:
 # brand
