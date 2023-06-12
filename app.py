@@ -137,7 +137,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     predict_price_checked = st.button('Predict Price')
 with col3:
-    recommendation_checked = st.button('Provide Recommendations')
+    recommendation_checked = st.button('Recommendations')
     
 # Prediction
 if predict_price_checked:
