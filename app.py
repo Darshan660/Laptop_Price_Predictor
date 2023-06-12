@@ -74,7 +74,7 @@ ram_options.insert(0, 'Select an option')
 ram = st.selectbox('RAM(in GB)', ram_options)
 
 # weight
-weight = st.number_input('Weight of the Laptop')
+weight = st.number_input('Weight of the Laptop(kg)')
 
 # Touchscreen
 touchscreen_options = ['No', 'Yes']
@@ -112,15 +112,23 @@ gpu_options = df['Gpu brand'].unique().tolist()
 gpu_options.insert(0, 'Select an option')
 gpu = st.selectbox('GPU', gpu_options)
 
-# OS
+# os
 if company == 'Apple':
     os_options = ['Mac']
 else:
     os_options = [option for option in df['os'].unique() if option != 'Mac']
 os = st.selectbox('OS', ['Select an OS'] + os_options)
 
+st.text("")
+st.text("")
+col1, col2, col3 = st.columns(3)
+with col1:
+    predict_price_checked = st.button('Predict Price')
+with col3:
+    compare_price_checked = st.button('Compare Price')
+
 # Prediction
-if st.button('Predict Price'):
+if predict_price_checked:
     # query
     if company == 'Select an option' or laptop_type == 'Select an option' or ram == 'Select an option' or \
             weight < 0.5 or touchscreen == 'Select an option' or ips == 'Select an option' or \
@@ -154,4 +162,107 @@ if st.button('Predict Price'):
                 st.write("Please select 0 if your laptop doesn't contain any SSD")
             else:
                 st.write("Please don't enter 0, mention some value!")
+
+if compare_price_checked:
+    if company == 'Select an option' or laptop_type == 'Select an option' or ram == 'Select an option' or \
+            weight < 0.5 or touchscreen == 'Select an option' or ips == 'Select an option' or \
+            screen_size == 0 or resolution == 'Select a resolution' or cpu == 'Select a CPU' or \
+            (hdd == 'Select an option' and ssd == 'Select an option') or (hdd == 0 and ssd == 0) or \
+            gpu == 'Select a GPU' or os == 'Select an OS':
+        st.error('Please select all specifications.')
+    else:
+        # Adding %20 between spaces in option
+        encoded_lt = quote(laptop_type)
+        encoded_cpu = quote(cpu)
+        # To set the search on url based on the specification so users gets the perfect match
+        if touchscreen.lower() == 'yes':
+            if hdd != 'Select an option' and hdd != 0:
+                url = "https://www.flipkart.com/search?q=" + str(company) + "%20" + str(encoded_lt) + "%20" + str(
+                    ram) + "gb%20" + "touchscreen" + "%20" + str(encoded_cpu) + "%20" + str(hdd) + \
+                      "gb%20hdd%20" + str(os) + "%20" + str(
+                    gpu) + "&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+
+            else:
+                url = "https://www.flipkart.com/search?q=" + str(company) + "%20" + str(encoded_lt) + "%20" + str(
+                    ram) + "gb%20ram%20" + "touchscreen" + "%20" + str(encoded_cpu) + "%20" + str(ssd) + \
+                      "gb%20ssd%20" + str(os) + "%20" + str(
+                    gpu) + "&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+
+        elif touchscreen.lower() == 'no':
+            if hdd != 'Select an option' and hdd != 0:
+                url = "https://www.flipkart.com/search?q=" + str(company) + "%20" + str(encoded_lt) + "%20" + str(
+                    ram) + "gb%20ram%20" + str(encoded_cpu) + "%20" + str(hdd) + \
+                      "gb%20hdd%20" + str(
+                    os) + "&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+
+            else:
+                url = "https://www.flipkart.com/search?q=" + str(company) + "%20" + str(encoded_lt) + "%20" + str(
+                    ram) + "gb%20ram%20" + str(encoded_cpu) + "%20" + str(ssd) + \
+                      "gb%20ssd%20" + str(
+                    os) + "&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+
+        else:  # No needed for this else as it won't move forward if user doesn't even select one specification properly
+            st.error("Your Laptop is Touch Screen or not? Please select an option")
+
+        try:
+            data = requests.get(url)
+            plain_text = data.text
+            soup = bs(plain_text, "html.parser")
+
+            # For Title (Top 3 Recommendations)
+            col1, col2, col3 = st.columns(3)
+            with col2:
+                st.markdown("<p align='center'><strong style='font-size: 24px;'>Top 3 Recommendations</strong></p>", unsafe_allow_html=True)
+
+            # To Scrape Image, Name, Price and link for the first three options
+            for i, product in enumerate(soup.find_all("div", class_="_2kHMtA", limit=3)):
+                # Extract the image URL
+                img_tag = product.find("img")
+                if img_tag and 'src' in img_tag.attrs:
+                    image_url = img_tag['src']
+                    response = requests.get(image_url)
+                    image_data = BytesIO(response.content)
+                    image = Image.open(image_data)
+                    resized_image = image.resize((215, 130))
+
+                    # Extract the name, price and link
+                    name = product.find("div", class_="_4rR01T").text
+                    price = product.find("div", class_="_30jeq3 _1_WHN1").text
+                    a_tag = product.find("a", class_="_1fQZEK")
+                    href_value = a_tag["href"]
+
+
+                    # Create columns for each option
+                    col1, col2, col3 = st.columns(3)
+
+                    def image_to_base64(image):
+                        buffered = BytesIO()
+                        image.save(buffered, format="PNG")
+                        return base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+                    # As link was opening in local host so to avoid that
+                    real_link = "https://www.flipkart.com" + href_value
+
+                    # Display the image, name, and price in respective columns
+                    with col1:
+                        image_html = f"<a href='{real_link}' target='_blank'><img src='data:image/png;base64,{image_to_base64(resized_image)}'></a>"
+                        st.markdown(image_html, unsafe_allow_html=True)
+
+
+                    with col2:
+                        st.markdown(
+                            f"<p align='center'><strong><a href='{real_link}' target='_blank' style='text-decoration: none; color: inherit;'>{name}</a></strong></p>",
+                            unsafe_allow_html=True,
+                        )
+
+                    with col3:
+                        st.markdown(f"<p align='center'><strong>{price}</strong></p>", unsafe_allow_html=True)
+
+                else:
+                    st.error("Some required elements not found in the product.")
+
+        except Exception as e:
+            st.error(f"An error occurred during scraping, Please ensure that the specifications are accurately selected. Avoid inputting any arbitrary values that may affect the results.")
+
+
 
