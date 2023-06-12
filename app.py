@@ -125,6 +125,12 @@ else:
 os = st.selectbox('OS', ['Select an OS'] + os_options)
 
 st.text("")
+
+# Add a expander for DISCLAIMER
+expand_sidebar = st.checkbox("DISCLAIMER")
+if expand_sidebar:
+    st.caption("The laptop price predictions provided by this application are generated using historical data and machine learning algorithms. It's important to note that actual prices may vary due to market dynamics and other factors. We encourage users to consider this information as a helpful reference and complement it with additional research and expert advice. Our app aims to assist users in making informed purchasing decisions by providing valuable insights into laptop prices and provide recommendations.")
+
 st.text("")
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -132,10 +138,6 @@ with col1:
 with col3:
     compare_price_checked = st.button('Compare Price')
     
-# Add a expander for DISCLAIMER
-expand_sidebar = st.checkbox("DISCLAIMER")
-if expand_sidebar:
-    st.caption("The laptop price predictions provided by this application are generated using historical data and machine learning algorithms. It's important to note that actual prices may vary due to market dynamics and other factors. We encourage users to consider this information as a helpful reference and complement it with additional research and expert advice. Our app aims to assist users in making informed purchasing decisions by providing valuable insights into laptop prices and provide recommendations.")
 # Prediction
 if predict_price_checked:
     # query
