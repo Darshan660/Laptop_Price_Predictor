@@ -218,6 +218,8 @@ if compare_price_checked:
             col1, col2, col3 = st.columns(3)
             with col2:
                 st.markdown("<p align='center'><strong style='font-size: 24px;'>Top 3 Recommendations</strong></p>", unsafe_allow_html=True)
+                
+            result_placeholder = st.empty()  # Create a placeholder element to display the result    
             with st.spinner("Searching..."): # show spinner while the webscraping code is running
                 # To Scrape Image, Name, Price and link for the first three options
                 for i, product in enumerate(soup.find_all("div", class_="_2kHMtA", limit=3)):
@@ -265,7 +267,9 @@ if compare_price_checked:
 
                     else:
                         st.error("Some required elements not found in the product.")
-
+                        
+            result_placeholder.write()  # Update the placeholder element with the result
+                
         except Exception as e:
             st.error(f"An error occurred during scraping, Please ensure that the specifications are accurately selected. Avoid inputting any arbitrary values that may affect the results.")
 
