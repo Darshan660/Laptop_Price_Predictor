@@ -135,8 +135,7 @@ with col3:
 # Add a expander for DISCLAIMER
 expand_sidebar = st.checkbox("DISCLAIMER")
 if expand_sidebar:
-    st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
-                
+    st.caption("The laptop price predictions provided by this application are generated using historical data and machine learning algorithms. It's important to note that actual prices may vary due to market dynamics and other factors. We encourage users to consider this information as a helpful reference and complement it with additional research and expert advice. Our app aims to assist users in making informed purchasing decisions by providing valuable insights into laptop prices and provide recommendations.")
 # Prediction
 if predict_price_checked:
     # query
