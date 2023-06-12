@@ -270,8 +270,8 @@ if compare_price_checked:
                         
             result_placeholder.write()  # Update the placeholder element with the result
             
-            # Add a expander
-            expand_sidebar = st.checkbox("Disclamer")
+    # Add a expander
+    expand_sidebar = st.checkbox("Disclamer")
     if expand_sidebar:
         st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
                 
