@@ -1,8 +1,13 @@
 import streamlit as st
+from PIL import Image
 import numpy as np
 import pickle
 from pathlib import Path
+from bs4 import BeautifulSoup as bs
+import requests
+from urllib.parse import quote
 import base64
+from io import BytesIO
 
 
 # --- GENERAL SETTINGS ---
