@@ -272,8 +272,8 @@ if compare_price_checked:
             
             # Add a expander
             expand_sidebar = st.checkbox("Disclamer")
-            if expand_sidebar:
-                st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
+    if expand_sidebar:
+        st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
                 
         except Exception as e:
             st.error(f"An error occurred during scraping, Please ensure that the specifications are accurately selected. Avoid inputting any arbitrary values that may affect the results.")
