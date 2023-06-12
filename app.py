@@ -137,7 +137,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     predict_price_checked = st.button('Predict Price')
 with col3:
-    compare_price_checked = st.button('Compare Price')
+    recommendation_checked = st.button('Provide Recommendations')
     
 # Prediction
 if predict_price_checked:
@@ -175,7 +175,7 @@ if predict_price_checked:
             else:
                 st.write("Please don't enter 0, mention some value!")
 
-if compare_price_checked:
+if recommendation_checked:
     if company == 'Select an option' or laptop_type == 'Select an option' or ram == 'Select an option' or \
             weight < 0.5 or touchscreen == 'Select an option' or ips == 'Select an option' or \
             screen_size == 0 or resolution == 'Select a resolution' or cpu == 'Select a CPU' or \
