@@ -131,7 +131,12 @@ with col1:
     predict_price_checked = st.button('Predict Price')
 with col3:
     compare_price_checked = st.button('Compare Price')
-
+    
+# Add a expander for DISCLAIMER
+expand_sidebar = st.checkbox("DISCLAIMER")
+if expand_sidebar:
+    st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
+                
 # Prediction
 if predict_price_checked:
     # query
@@ -270,11 +275,6 @@ if compare_price_checked:
                         
             result_placeholder.write()  # Update the placeholder element with the result
             
-            # Add a expander
-            expand_sidebar = st.checkbox("Disclamer")
-            if expand_sidebar:
-                st.caption("The laptop price predictions provided by this application are based on historical data and machine learning algorithms. Actual prices may vary, and we recommend conducting additional research and consulting with experts before making any purchasing decisions.")  
-                
         except Exception as e:
             st.error(f"An error occurred during scraping, Please ensure that the specifications are accurately selected. Avoid inputting any arbitrary values that may affect the results.")
 
